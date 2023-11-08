@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+//microCMSの呼び出し
+import { getBlogs } from '../libs/microcms';
+const response = await getBlogs({ fields: ['id', 'title'] });
+---
+
+<Layout title="Prototype">
+    <main class="mainContents">
+        <h1 class="postHeading">お知らせ</h1>
+        <ul class="postList">
+            {
+                response.contents.map((blog: any) => (
+                    <li>
+                        <a href={blog.id}>{blog.title}</a>
+                    </li>
+                ))
+            }
+        </ul>
+    </main>
+</Layout>
+
+<style>
+    html {
+        background-color: #ffffff;
+    }
+</style>

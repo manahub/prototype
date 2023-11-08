@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getBlogDetail , getBlogs} from '../libs/microcms';
+
+export async function getStaticPaths() {
+    const response = await getBlogs({ fields: ['id'] });
+    return response.contents.map((blog: any) => ({
+        params: {
+            blogId: blog.id,
+        },
+    }));
+}
+
+const { blogId } = Astro.params;
+const blog = await getBlogDetail(blogId as string);
+---
+
+<Layout title="Blog Detail">
+    <article class="postBlock">
+        <h1 class="postTitle">{blog.title}</h1>
+        <p class="postData">日時：{new Date (blog.publishedAt).toLocaleDateString('ja-JP', { year: 'numeric', month: 'short', day: 'numeric'})}</p>
+        <div class="postContents" set:html={blog.content}></div>
+    </article>
+</Layout>
+
+<style>
+    html {
+        background-color: #ffffff;
+    }
+</style>
